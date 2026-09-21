@@ -14,6 +14,9 @@ export default function LoginPage(){
         const res = await fetch(`http://localhost:8081/api/customers/login?email=${email}&password=${password}`, {
         });
         if (res.ok) {
+            const customer = await res.json();
+            localStorage.setItem('customerId', customer.id);
+            localStorage.setItem('customerEmail', customer.email);
             await router.push("/rooms")
         }
 
