@@ -2,26 +2,26 @@
 import {useState} from "react";
 import {useRouter} from "next/navigation";
 
-
-export default function RegisterPage() {
+export default function LoginPage(){
     const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
 
-    async function register(){
+    async function login(){
 
-        const res = await fetch("http://localhost:8081/api/customers", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({name, email, phoneNumber, password})
+        const res = await fetch(`http://localhost:8081/api/customers/login?email=${email}&password=${password}`, {
         });
         if (res.ok) {
-            await router.push("/login")
+            const customer = await res.json();
+            localStorage.setItem('customerId', customer.id);
+            localStorage.setItem('customerEmail', customer.email);
+            await router.push("/rooms")
         }
-    }
 
+
+    }
     return (
         <main className="min-h-screen bg-[#F5F0E8] pt-24 p-8">
             <div className="max-w-2xl mx-auto">
@@ -29,21 +29,16 @@ export default function RegisterPage() {
                 <div className="bg-[#EDE8D8] rounded-2xl p-6">
                     <form className={"flex flex-wrap gap-4"} onSubmit={async e => {
                         e.preventDefault();
-                        await register()
+                        await login()
                     }}>
-                        <input className={"flex-1 p-3 rounded-lg border border-[#C0522B]/30 bg-white text-[#C0522B]"}
-                               value={name} onChange={e => setName(e.target.value)} placeholder="Ditt namn"/>
                         <input className={"flex-1 p-3 rounded-lg border border-[#C0522B]/30 bg-white text-[#C0522B]"}
                                value={email} onChange={e => setEmail(e.target.value)}
                                placeholder="example@hotmail.com"/>
                         <input className={"flex-1 p-3 rounded-lg border border-[#C0522B]/30 bg-white text-[#C0522B]"}
-                               value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)}
-                               placeholder="07 123 123 12"/>
-                        <input className={"flex-1 p-3 rounded-lg border border-[#C0522B]/30 bg-white text-[#C0522B]"}
                                value={password} onChange={e => setPassword(e.target.value)} placeholder="*****"/>
                         <button
                             className={"w-full mt-6 py-3 bg-[#C0522B] text-white rounded-full hover:-translate-y-1 transition-transform"}
-                            type="submit">Register
+                            type="submit">Login
                         </button>
 
                     </form>
