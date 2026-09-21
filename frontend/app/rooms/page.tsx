@@ -2,6 +2,7 @@
 import { DayPicker, DateRange } from "react-day-picker"
 import "react-day-picker/style.css"
 import {useEffect, useState} from "react";
+import {useRouter} from 'next/navigation';
 
 type Room = {
     id: number;
@@ -9,9 +10,11 @@ type Room = {
     beds: number;
     pricePerNight: number;
     description: string;
+    imgUrl: string;
 }
 
 export default function RoomsPage() {
+    const router = useRouter();
     const [period, setPeriod] = useState<DateRange | undefined>(undefined);
     const[rooms, setRooms] = useState<Room[]>([] );
     const[hasSearched, setSearched] = useState(false);
@@ -32,6 +35,9 @@ export default function RoomsPage() {
             .then(data => setRooms(data))
             .then(() => setSearched(true))
     }
+    function choose(roomId: number) {
+        router.push(`/rooms/${roomId}?checkIn=${formatDate(period!.from!)}&checkOut=${formatDate(period!.to!)}`);
+    }
 
     return (
         <main className="relative min-h-screen flex items-center justify-center pt-24 bg-cover bg-center " style={{ backgroundImage: "url('https://images.unsplash.com/photo-1709809328185-ba9ee5a06121?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
@@ -40,7 +46,7 @@ export default function RoomsPage() {
             {hasSearched? (
                 <div className={"flex gap-8 w-full p-8 items-start"}>
                     <div className={"bg-[#C0522B] text-white rounded-2xl p-6 w-80"}>
-                    <p>Du har sökt</p>
+                    <p className={"text-xl border-b border-white/40 pb-3 mb-4"}>Du har sökt</p>
                     <div className="flex gap-4">
                         <div className="bg-[#F5F0E8] text-[#C0522B] rounded-xl p-4 text-center flex-1">
                             <p className="bg-[#E8A090] -mx-4 -mt-4 px-4 py-2 rounded-t-xl mb-4">Incheckning</p>
@@ -71,9 +77,7 @@ export default function RoomsPage() {
                     <div className={"flex-1"}>
                         {rooms.map(room => (
                             <div key={room.id} className={"bg-[#F5F0E8] rounded-2xl mb-4 flex overflow-hidden"}>
-                                <div className={"w-64 h-48 bg-gray-300 flex-shrink-0"}>
-
-                                </div>
+                                    <img src={room.imgUrl} className="w-64 h-48 object-cover flex-shrink-0" />
                                 <div className={"p-6 flex flex-col justify-between flex-1"}>
                                     <div>
                                         <h2 className={"text-[#C0522B] text-2xl font-bold"}>Rum {room.roomNumber}</h2>
@@ -84,7 +88,7 @@ export default function RoomsPage() {
                                             <p className={"text-[#C0522B] text-xl font-bold mt-4 "}>Från {room.pricePerNight} SEK</p>
                                             <p className={"text-sm"}> för {nights}</p>
                                         </div>
-                                        <button className={"bg-[#C0522B] text-white px-6 py-2 rounded-full mt-2"}>Välj</button>
+                                        <button onClick={() => choose(room.id)} className={"bg-[#C0522B] text-white px-6 py-2 rounded-full mt-2"}>Välj</button>
                                     </div>
                                 </div>
                             </div>
