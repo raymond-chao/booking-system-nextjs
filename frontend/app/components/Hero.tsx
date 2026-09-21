@@ -9,7 +9,7 @@ export default function Hero() {
                 <p className={"uppercase tracking-widest text-sm font-semibold"}>Mingle around</p>
                 <div className="flex gap-4 mt-6 font-bold">
                 <Link href="/" className={"bg-[#C0522B] text-white rounded-full px-6 py-3 gap-4"}>Boka övernattning</Link>
-                <Link href="/" className={"border border-white text-white rounded-full px-6 py-3 gap-4"}>Skapa konto</Link>
+                <Link href="/register" className={"border border-white text-white rounded-full px-6 py-3 gap-4"}>Skapa konto</Link>
                 </div>
             </div>
 
