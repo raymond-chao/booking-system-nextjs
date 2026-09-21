@@ -8,6 +8,8 @@ import com.example.customer_service.model.Customer;
 import com.example.customer_service.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -95,5 +97,16 @@ public class CustomerService {
         }
 
         customerRepository.delete(customer);
+    }
+    @GetMapping("/login")
+    public Customer login(
+            @RequestParam String email,
+            @RequestParam String password) {
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Fel lösenord"));
+        if(!passwordEncoder.matches(password, customer.getPassword())) {
+            throw new RuntimeException("Fel lösenord");
+        }
+        return customer;
     }
 }

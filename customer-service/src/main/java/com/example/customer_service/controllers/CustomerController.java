@@ -2,10 +2,12 @@ package com.example.customer_service.controllers;
 
 import com.example.customer_service.model.Customer;
 import com.example.customer_service.model.CreateCustomerRequest;
+import com.example.customer_service.repository.CustomerRepository;
 import com.example.customer_service.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,9 +18,11 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, CustomerRepository customerRepository) {
         this.customerService = customerService;
+        this.customerRepository = customerRepository;
     }
 
     @GetMapping
@@ -69,5 +73,9 @@ public class CustomerController {
         customerService.deleteCustomer(id);
 
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/login")
+    public Customer login(@RequestParam String email, @RequestParam String password) {
+        return customerService.login(email, password);
     }
 }
