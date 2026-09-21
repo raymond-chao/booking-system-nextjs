@@ -4,6 +4,8 @@ import "react-day-picker/style.css"
 import {useEffect, useState} from "react";
 import {useRouter} from 'next/navigation';
 
+import gsap from "gsap";
+
 type Room = {
     id: number;
     roomNumber: string;
@@ -39,6 +41,13 @@ export default function RoomsPage() {
         router.push(`/rooms/${roomId}?checkIn=${formatDate(period!.from!)}&checkOut=${formatDate(period!.to!)}`);
     }
 
+    function onHover(e: React.MouseEvent<HTMLButtonElement>) {
+        gsap.to(e.currentTarget, { y: -8, duration: 0.2, ease: "power2.out" });
+    }
+    function onLeave(e: React.MouseEvent<HTMLButtonElement>) {
+        gsap.to(e.currentTarget, { y: 0, duration: 0.2, ease: "power2.out" });
+    }
+
     return (
         <main className="relative min-h-screen flex items-center justify-center pt-24 bg-cover bg-center " style={{ backgroundImage: "url('https://images.unsplash.com/photo-1709809328185-ba9ee5a06121?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
             <div className="absolute inset-0 bg-white/50" />
@@ -72,7 +81,7 @@ export default function RoomsPage() {
                         <p>Antal rum:</p>
                         <p>1 rum, 2 gäster</p>
                     </div>
-                    <button className="w-full mt-4 py-3 bg-white text-[#C0522B] rounded-full">Ändra sökning</button>
+                    <button onMouseEnter={onHover} onMouseLeave={onLeave} onClick={() => setSearched(false)} className="w-full mt-4 py-3 bg-white text-[#C0522B] rounded-full">Ändra sökning</button>
                     </div>
                     <div className={"flex-1"}>
                         {rooms.map(room => (
@@ -88,7 +97,7 @@ export default function RoomsPage() {
                                             <p className={"text-[#C0522B] text-xl font-bold mt-4 "}>Från {room.pricePerNight} SEK</p>
                                             <p className={"text-sm"}> för {nights}</p>
                                         </div>
-                                        <button onClick={() => choose(room.id)} className={"bg-[#C0522B] text-white px-6 py-2 rounded-full mt-2"}>Välj</button>
+                                        <button onMouseEnter={onHover} onMouseLeave={onLeave} onClick={() => choose(room.id)} className={"bg-[#C0522B] text-white px-6 py-2 rounded-full mt-2"}>Välj</button>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +128,7 @@ export default function RoomsPage() {
                 </select>
 
                 <div className={"flex gap-2 mt-3 justify-center"}>
-                    <button onClick={search} className={"bg-[#E8A090] text-white px-10 rounded-full"}>Sök</button>
+                    <button onMouseEnter={onHover} onMouseLeave={onLeave} onClick={search} className={"bg-[#E8A090] text-white px-10 rounded-full"}>Sök</button>
                 </div>
 
             </div>
