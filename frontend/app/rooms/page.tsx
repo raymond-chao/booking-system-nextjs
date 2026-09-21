@@ -75,7 +75,7 @@ export default function RoomsPage() {
                     </div>
                     <div className="flex justify-between text-sm mt-4">
                         <p>Antal nätter:</p>
-                        <p>{nights} natt</p>
+                        <p>{nights} {nights === 1 ? 'natt' : 'nätter'}</p>
                     </div>
                     <div className="flex justify-between text-sm">
                         <p>Antal rum:</p>

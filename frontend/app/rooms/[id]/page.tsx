@@ -2,6 +2,9 @@
 import {useParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {useSearchParams} from "next/navigation";
+import {useRouter} from "next/navigation";
+
+import gsap from "gsap";
 
 type Room = {
     id: number;
@@ -13,9 +16,12 @@ type Room = {
 }
 
 
+
+
 export default function RoomPage() {
     const params = useParams();
     const id = params.id;
+    const router = useRouter();
 
     const searchParams = useSearchParams();
     const checkIn = searchParams.get('checkIn');
@@ -24,12 +30,10 @@ export default function RoomPage() {
     const checkInDate = checkIn ? new Date(checkIn): null;
     const checkOutDate = checkOut ? new Date(checkOut): null;
 
-    console.log(checkInDate);
-
     const cap = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
     const nights = checkInDate && checkOutDate
-        ? Math.round((checkInDate.getTime() - checkOutDate.getTime()) / (1000 * 60 * 60 * 24))
+        ? Math.round((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24))
         : 0;
 
     const[room, setRoom] = useState<Room | null>(null);
@@ -40,6 +44,13 @@ export default function RoomPage() {
             console.log(data)
             });
     }, []);
+
+    function onHover(e: React.MouseEvent<HTMLButtonElement>) {
+        gsap.to(e.currentTarget, { y: -8, duration: 0.2, ease: "power2.out" });
+    }
+    function onLeave(e: React.MouseEvent<HTMLButtonElement>) {
+        gsap.to(e.currentTarget, { y: 0, duration: 0.2, ease: "power2.out" });
+    }
 
     if (!room) return <p>Laddar...</p>
     return (
@@ -67,13 +78,13 @@ export default function RoomPage() {
                     </div>
                     <div className="flex justify-between text-sm mt-4">
                         <p>Antal nätter:</p>
-                        <p>{nights} natt</p>
+                        <p>{nights} {nights === 1 ? 'natt' : 'nätter'}</p>
                     </div>
                     <div className="flex justify-between text-sm">
                         <p>Antal rum:</p>
                         <p>1 rum, 2 gäster</p>
                     </div>
-                    <button className="w-full mt-4 py-3 bg-white text-[#C0522B] rounded-full">Ändra sökning</button>
+                    <button onMouseEnter={onHover} onMouseLeave={onLeave} onClick={() => router.push('/rooms')} className="w-full mt-4 py-3 bg-white text-[#C0522B] rounded-full">Ändra sökning</button>
                 </div>
 
                 <div className="flex-1 bg-white rounded-2xl p-6">  {/* höger - rum-info */}
@@ -85,7 +96,7 @@ export default function RoomPage() {
                             <img src={room.imgUrl} className="w-64 h-full object-cover flex-shrink-0"/>
                             <div className="p-6 flex-1">
                                 <p className="text-2xl font-bold mt-4">Från {room.pricePerNight} SEK</p>
-                                <button className="bg-[#C0522B] text-white px-8 py-3 rounded-full mt-4">Boka</button>
+                                <button onMouseEnter={onHover} onMouseLeave={onLeave} className="bg-[#C0522B] text-white px-8 py-3 rounded-full mt-4">Boka</button>
                             </div>
                         </div>
                     </div>
