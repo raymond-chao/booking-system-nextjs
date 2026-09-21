@@ -32,5 +32,9 @@ public class RoomController {
         return roomService.getAvailableRooms(checkIn, checkOut);
 
     }
+    @GetMapping("/{id}")
+    public Room getRoomById(@PathVariable Long id) {
+        return roomService.getRoomById(id);
+    }
 
 }

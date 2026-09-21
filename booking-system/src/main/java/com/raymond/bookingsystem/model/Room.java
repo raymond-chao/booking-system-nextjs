@@ -43,12 +43,15 @@ public class Room {
     @OneToMany(mappedBy = "room", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Booking> bookings = new ArrayList<>();
-    
-    public Room(String roomNumber, int beds, BigDecimal pricePerNight, String description) {
+
+    private String imgUrl;
+
+    public Room(String roomNumber, int beds, BigDecimal pricePerNight, String description, String imgUrl) {
         this.roomNumber = roomNumber;
         this.beds = beds;
         this.pricePerNight = pricePerNight;
         this.description = description;
+        this.imgUrl = imgUrl;
     }
 
     public Long getId() {
@@ -83,4 +86,13 @@ public class Room {
     public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
     }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
 }
