@@ -1,6 +1,7 @@
 'use client';
 import {useState} from "react";
 import {useRouter} from "next/navigation";
+import Link from "next/link";
 
 
 export default function RegisterPage() {
@@ -47,6 +48,10 @@ export default function RegisterPage() {
                         </button>
 
                     </form>
+                    <p className="text-center mt-4 text-[#C0522B]">
+                        Har du redan ett konto?{" "}
+                        <Link href="/login" className="underline font-bold">Logga in</Link>
+                    </p>
                 </div>
             </div>
         </main>

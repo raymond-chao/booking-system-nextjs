@@ -26,4 +26,13 @@ public class JwtService {
                 .getPayload()
                 .getSubject();
     }
+
+    public String generateToken(String email){
+        return Jwts.builder()
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(getKey())
+                .compact();
+    }
 }

@@ -49,7 +49,7 @@ export default function RoomsPage() {
     }
 
     return (
-        <main className="relative min-h-screen flex items-center justify-center pt-24 bg-cover bg-center " style={{ backgroundImage: "url('https://images.unsplash.com/photo-1709809328185-ba9ee5a06121?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
+        <main className="relative min-h-screen flex items-center justify-center pt-24 bg-cover bg-center " style={{ backgroundImage: "url('https://images.unsplash.com/photo-1444181476367-d11d5ac302a7?q=80&w=1174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
             <div className="absolute inset-0 bg-white/50" />
             <div className="relative pt-24 p-8 flex gap-8">
             {hasSearched? (
