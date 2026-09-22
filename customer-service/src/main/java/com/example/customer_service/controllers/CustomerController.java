@@ -3,7 +3,9 @@ package com.example.customer_service.controllers;
 import com.example.customer_service.model.Customer;
 import com.example.customer_service.model.CreateCustomerRequest;
 import com.example.customer_service.repository.CustomerRepository;
+import com.example.customer_service.security.JwtService;
 import com.example.customer_service.service.CustomerService;
+import io.jsonwebtoken.Jwts;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+record LoginResponse(Customer customer, String token) {}
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/customers")
@@ -19,10 +21,12 @@ public class CustomerController {
 
     private final CustomerService customerService;
     private final CustomerRepository customerRepository;
+    private final JwtService  jwtService;
 
-    public CustomerController(CustomerService customerService, CustomerRepository customerRepository) {
+    public CustomerController(CustomerService customerService, CustomerRepository customerRepository, JwtService jwtService) {
         this.customerService = customerService;
         this.customerRepository = customerRepository;
+        this.jwtService = jwtService;
     }
 
     @GetMapping
@@ -75,7 +79,9 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/login")
-    public Customer login(@RequestParam String email, @RequestParam String password) {
-        return customerService.login(email, password);
+    public LoginResponse login(@RequestParam String email, @RequestParam String password) {
+        Customer customer = customerService.login(email, password);
+        String token = jwtService.generateToken(email);
+        return new LoginResponse(customer, token);
     }
 }

@@ -52,9 +52,34 @@ export default function RoomPage() {
         gsap.to(e.currentTarget, { y: 0, duration: 0.2, ease: "power2.out" });
     }
 
+    async function book() {
+        if(!room) return;
+        const token = localStorage.getItem('token');
+        if(!token) {
+            router.push("/login");
+            return;
+        }
+        const email = localStorage.getItem('customerEmail');
+        const res = await fetch('http://localhost:8080/api/bookings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                checkInDate: checkIn,
+                checkOutDate: checkOut,
+                customerEmail: email,
+                room: { id: room.id },
+                numOfGuests: 1
+            })
+        });
+        if (res.ok) alert('Bokning bekräftad!');
+    }
+
     if (!room) return <p>Laddar...</p>
     return (
-        <main className="min-h-screen bg-[#F5F0E8] pt-24 p-8 text-gray-800 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1709809328185-ba9ee5a06121?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
+        <main className="min-h-screen bg-[#F5F0E8] pt-24 p-8 text-gray-800 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1444181476367-d11d5ac302a7?q=80&w=1174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
             <div className="flex gap-8">
                 <div className={"bg-[#C0522B] text-white rounded-2xl p-6 w-80"}>
                     <p className={"text-xl border-b border-white/40 pb-3 mb-4"}>Du har sökt</p>
@@ -96,7 +121,7 @@ export default function RoomPage() {
                             <img src={room.imgUrl} className="w-64 h-full object-cover flex-shrink-0"/>
                             <div className="p-6 flex-1">
                                 <p className="text-2xl font-bold mt-4">Från {room.pricePerNight} SEK</p>
-                                <button onMouseEnter={onHover} onMouseLeave={onLeave} className="bg-[#C0522B] text-white px-8 py-3 rounded-full mt-4">Boka</button>
+                                <button onMouseEnter={onHover} onMouseLeave={onLeave} onClick={book} className="bg-[#C0522B] text-white px-8 py-3 rounded-full mt-4">Boka</button>
                             </div>
                         </div>
                     </div>
