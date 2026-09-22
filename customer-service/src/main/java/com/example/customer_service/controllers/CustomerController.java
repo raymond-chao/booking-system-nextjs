@@ -53,14 +53,18 @@ public class CustomerController {
 //    }
 
     @PostMapping
-    public ResponseEntity<Customer> createCustomer(
+    public ResponseEntity<?> createCustomer(
             @Valid @RequestBody CreateCustomerRequest request) {
+        try {
 
-        Customer customer = customerService.createCustomer(request);
+            Customer customer = customerService.createCustomer(request);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(customer);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(customer);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
 
@@ -79,9 +83,14 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/login")
-    public LoginResponse login(@RequestParam String email, @RequestParam String password) {
-        Customer customer = customerService.login(email, password);
-        String token = jwtService.generateToken(email);
-        return new LoginResponse(customer, token);
+    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+        try {
+            Customer customer = customerService.login(email, password);
+            String token = jwtService.generateToken(email);
+            return ResponseEntity.ok(new LoginResponse(customer, token));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(401).build();
+        }
+
     }
 }

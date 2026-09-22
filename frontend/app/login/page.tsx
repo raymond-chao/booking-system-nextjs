@@ -7,6 +7,7 @@ export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     async function login() {
         const res = await fetch(`http://localhost:8081/api/customers/login?email=${email}&password=${password}`);
@@ -15,7 +16,28 @@ export default function LoginPage() {
             localStorage.setItem('customerId', data.customer.id);
             localStorage.setItem('customerEmail', data.customer.email);
             localStorage.setItem('token', data.token);
+            const pending = localStorage.getItem('pendingBooking');
+            if (pending) {
+                const b = JSON.parse(pending);
+                await fetch('http://localhost:8080/api/bookings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${data.token}`
+                    },
+                    body: JSON.stringify({
+                        checkInDate: b.checkIn,
+                        checkOutDate: b.checkOut,
+                        customerEmail: data.customer.email,
+                        room: { id: b.roomId },
+                        numOfGuests: 1
+                    })
+                });
+                localStorage.removeItem('pendingBooking');
+            }
             router.push("/account");
+        } else{
+            setError("Fel email eller Lösenord!");
         }
     }
 
@@ -34,6 +56,8 @@ export default function LoginPage() {
                         <input className={"flex-1 p-3 rounded-lg border border-[#C0522B]/30 bg-white text-[#C0522B]"}
                                type="password"
                                value={password} onChange={e => setPassword(e.target.value)} placeholder="*****"/>
+                        {error && <p className="text-red-600 w-full text-center">{error}</p>}
+
                         <button
                             className={"w-full mt-6 py-3 bg-[#C0522B] text-white rounded-full hover:-translate-y-1 transition-transform"}
                             type="submit">Logga in

@@ -56,7 +56,12 @@ export default function RoomPage() {
         if(!room) return;
         const token = localStorage.getItem('token');
         if(!token) {
-            router.push("/login");
+            localStorage.setItem('pendingBooking', JSON.stringify({
+                roomId: room.id,
+                checkIn,
+                checkOut
+            }));
+            router.push('/login');
             return;
         }
         const email = localStorage.getItem('customerEmail');

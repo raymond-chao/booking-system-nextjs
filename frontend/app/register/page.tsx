@@ -10,6 +10,7 @@ export default function RegisterPage() {
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     async function register(){
 
@@ -20,6 +21,8 @@ export default function RegisterPage() {
         });
         if (res.ok) {
             await router.push("/login")
+        } else {
+            setError("Kontot finns redan!");
         }
     }
 
@@ -42,6 +45,7 @@ export default function RegisterPage() {
                                placeholder="07 123 123 12"/>
                         <input className={"flex-1 p-3 rounded-lg border border-[#C0522B]/30 bg-white text-[#C0522B]"}
                                value={password} onChange={e => setPassword(e.target.value)} placeholder="*****"/>
+                        {error && <p className="text-red-600 w-full text-center">{error}</p>}
                         <button
                             className={"w-full mt-6 py-3 bg-[#C0522B] text-white rounded-full hover:-translate-y-1 transition-transform"}
                             type="submit">Register
