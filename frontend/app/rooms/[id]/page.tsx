@@ -13,6 +13,7 @@ type Room = {
     pricePerNight: number;
     description: string;
     imgUrl: string;
+    roomType: string;
 }
 
 
@@ -22,6 +23,7 @@ export default function RoomPage() {
     const params = useParams();
     const id = params.id;
     const router = useRouter();
+    const [extraBed, setExtraBed] = useState(false);
 
     const searchParams = useSearchParams();
     const checkIn = searchParams.get('checkIn');
@@ -76,7 +78,8 @@ export default function RoomPage() {
                 checkOutDate: checkOut,
                 customerEmail: email,
                 room: { id: room.id },
-                numOfGuests: 1
+                numOfGuests: 1,
+                extraBed: extraBed
             })
         });
         if (res.ok) alert('Bokning bekräftad!');
@@ -126,6 +129,13 @@ export default function RoomPage() {
                             <img src={room.imgUrl} className="w-64 h-full object-cover flex-shrink-0"/>
                             <div className="p-6 flex-1">
                                 <p className="text-2xl font-bold mt-4">Från {room.pricePerNight} SEK</p>
+                                <p className="text-2xl font-bold mt-4">Från {room.pricePerNight} SEK</p>
+                                {room.roomType === 'DOUBLE' && (
+                                    <label className="flex items-center gap-2 mt-2">
+                                        <input type="checkbox" checked={extraBed} onChange={e => setExtraBed(e.target.checked)} />
+                                        Lägg till extrasäng
+                                    </label>
+                                )}
                                 <button onMouseEnter={onHover} onMouseLeave={onLeave} onClick={book} className="bg-[#C0522B] text-white px-8 py-3 rounded-full mt-4">Boka</button>
                             </div>
                         </div>
