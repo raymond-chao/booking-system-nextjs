@@ -52,9 +52,12 @@ export default function AccountPage() {
                 <h1 className="text-[#C0522B] text-3xl font-bold mb-6">Mitt konto</h1>
                 {customer && (
                     <div className="bg-white text-[#C0522B] rounded-2xl p-6 mb-6">
-                        <p>{customer.name}</p>
-                        <p>{customer.email}</p>
-                        <p>{customer.phoneNumber}</p>
+                        <p className="text-m text-gray-500">Namn</p>
+                        <p className="font-bold text-2xl mb-3">{customer.name}</p>
+                        <p className="text-m text-gray-500">Email</p>
+                        <p className="font-bold text-2xl mb-3">{customer.email}</p>
+                        <p className="text-m text-gray-500">Telefon</p>
+                        <p className="font-bold text-2xl">{customer.phoneNumber}</p>
                     </div>
                 )}
             </div>
