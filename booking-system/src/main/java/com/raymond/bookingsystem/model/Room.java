@@ -46,12 +46,17 @@ public class Room {
 
     private String imgUrl;
 
-    public Room(String roomNumber, int beds, BigDecimal pricePerNight, String description, String imgUrl) {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoomType roomType;
+
+    public Room(String roomNumber, int beds, BigDecimal pricePerNight, String description, String imgUrl, RoomType roomType) {
         this.roomNumber = roomNumber;
         this.beds = beds;
         this.pricePerNight = pricePerNight;
         this.description = description;
         this.imgUrl = imgUrl;
+        this.roomType = roomType;
     }
 
     public Long getId() {

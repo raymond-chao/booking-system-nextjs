@@ -6,6 +6,7 @@ import com.raymond.bookingsystem.error.ConflictException;
 import com.raymond.bookingsystem.error.NotFoundException;
 import com.raymond.bookingsystem.model.Booking;
 import com.raymond.bookingsystem.model.Room;
+import com.raymond.bookingsystem.model.RoomType;
 import com.raymond.bookingsystem.repository.BookingRepository;
 import com.raymond.bookingsystem.model.BookingStatus;
 import com.raymond.bookingsystem.repository.RoomRepository;
@@ -43,9 +44,12 @@ public class BookingService {
         if (!customerClient.customerExists(email)) {
             throw new NotFoundException("Kund finns inte: " + email);
         }
-
         Room room = roomRepository.findById(booking.getRoom().getId())
                 .orElseThrow(() -> new NotFoundException("Rummet hittades inte"));
+
+        if (booking.isExtraBed() && room.getRoomType() != RoomType.DOUBLE) {
+            throw new BadRequestException("Extrasäng kan endast läggas till för dubbelrum");
+        }
 
         booking.setCustomerEmail(email);
         booking.setRoom(room);

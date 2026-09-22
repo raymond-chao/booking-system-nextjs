@@ -32,6 +32,9 @@ public class Booking {
 
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
+    private boolean extraBed;
+
+
 
     public Booking() {
 
@@ -96,4 +99,11 @@ public class Booking {
     public BookingStatus getStatus() {return status;}
 
     public void setStatus(BookingStatus status) {this.status = status;}
+    public boolean isExtraBed() {
+        return extraBed;
+    }
+
+    public void setExtraBed(boolean extraBed) {
+        this.extraBed = extraBed;
+    }
 }
