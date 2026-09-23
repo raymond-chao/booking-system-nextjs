@@ -82,7 +82,15 @@ export default function RoomPage() {
                 extraBed: extraBed
             })
         });
-        if (res.ok) alert('Bokning bekräftad!');
+        if (res.ok) {
+            const booking = await res.json();
+            localStorage.setItem('lastBooking', JSON.stringify(booking));
+            router.push('/confirmation');
+        } else if (res.status === 409) {
+            alert("Rummet är redan bokat dessa datum");
+        } else {
+            alert("Något gick fel, försök igen");
+        }
     }
 
     if (!room) return <p>Laddar...</p>
@@ -128,7 +136,6 @@ export default function RoomPage() {
                         <div className="flex-1 bg-white rounded-2xl overflow-hidden flex">
                             <img src={room.imgUrl} className="w-64 h-full object-cover flex-shrink-0"/>
                             <div className="p-6 flex-1">
-                                <p className="text-2xl font-bold mt-4">Från {room.pricePerNight} SEK</p>
                                 <p className="text-2xl font-bold mt-4">Från {room.pricePerNight} SEK</p>
                                 {room.roomType === 'DOUBLE' && (
                                     <label className="flex items-center gap-2 mt-2">
