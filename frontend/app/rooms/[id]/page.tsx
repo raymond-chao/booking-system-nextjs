@@ -86,6 +86,14 @@ export default function RoomPage() {
             const booking = await res.json();
             localStorage.setItem('lastBooking', JSON.stringify(booking));
             router.push('/confirmation');
+        }else if (res.status === 401) {
+            localStorage.setItem('pendingBooking', JSON.stringify({
+                roomId: room.id,
+                checkIn,
+                checkOut
+            }));
+            localStorage.removeItem('token');
+            router.push('/login');
         } else if (res.status === 409) {
             alert("Rummet är redan bokat dessa datum");
         } else {
