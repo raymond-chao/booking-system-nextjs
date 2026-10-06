@@ -1,7 +1,9 @@
 package com.raymond.bookingsystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -13,12 +15,10 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull(message = "Utcheckningsdatumet kan inte vara tomt")
-    @FutureOrPresent(message = "Utcheckningsdatumet måste vara i framtiden")
+    @NotNull(message = "Incheckningsdatumet kan inte vara tomt")
     private LocalDate checkInDate;
 
     @NotNull(message = "Utcheckningsdatumet kan inte vara tomt")
-    @FutureOrPresent(message = "Utcheckningsdatumet måste vara i framtiden")
     private LocalDate checkOutDate;
 
     private int numOfGuests;
@@ -27,6 +27,8 @@ public class Booking {
     @ManyToOne(optional = false)
     private Room room;
 
+    @NotBlank(message = "Email kan inte vara tomt")
+    @Email
     @Column(name = "customer_email")
     private String customerEmail;
 

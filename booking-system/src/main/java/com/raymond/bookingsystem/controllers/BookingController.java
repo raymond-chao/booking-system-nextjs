@@ -2,6 +2,8 @@ package com.raymond.bookingsystem.controllers;
 
 import com.raymond.bookingsystem.model.*;
 import com.raymond.bookingsystem.service.BookingService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class BookingController {
     }
 
     @PostMapping
+    @Valid
     @ResponseStatus(HttpStatus.CREATED)
     public Booking createBooking(@RequestBody Booking booking) {
         return bookingService.createBooking(booking, booking.getCustomerEmail());

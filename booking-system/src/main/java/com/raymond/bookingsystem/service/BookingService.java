@@ -11,7 +11,9 @@ import com.raymond.bookingsystem.repository.BookingRepository;
 import com.raymond.bookingsystem.model.BookingStatus;
 import com.raymond.bookingsystem.repository.RoomRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,11 +38,8 @@ public class BookingService {
 
     //Uppdaterad booking med customer
     public Booking createBooking(Booking booking, String email) {
+        validateDates(booking.getCheckInDate(), booking.getCheckOutDate());
 
-
-        if (!booking.getCheckOutDate().isAfter(booking.getCheckInDate())) {
-            throw new BadRequestException("Utcheckningsdatum måste vara efter incheckningsdatum.");
-        }
         if (!customerClient.customerExists(email)) {
             throw new NotFoundException("Kund finns inte: " + email);
         }
@@ -74,10 +73,10 @@ public class BookingService {
 
     private void validateDates(LocalDate checkIn, LocalDate checkOut) {
         if (!checkOut.isAfter(checkIn)) {
-            throw new RuntimeException("Utcheckningsdatum måste vara efter incheckningsdatum.");
+            throw new BadRequestException("Utcheckningsdatum måste vara efter incheckningsdatum.");
         }
         if (checkIn.isBefore(LocalDate.now())) {
-            throw new RuntimeException("Incheckningsdatum kan inte vara i det förflutna.");
+            throw new BadRequestException("Incheckningsdatum kan inte vara i det förflutna.");
         }
     }
 
