@@ -14,6 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -24,6 +25,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 public class BookingIntegrationTest {
+
+    LocalDate checkInDate = LocalDate.now().plusDays(1);
+    LocalDate checkOutDate = LocalDate.now().plusDays(4);
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -45,8 +50,16 @@ public class BookingIntegrationTest {
         when(customerClient.customerExists("hej@test.com")).thenReturn(true);
 
 //        Act and assert
-        mockMvc.perform(post("/api/bookings").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON)
-                .content("{\"room\":{\"id\":1},\"checkInDate\":\"2026-12-01\",\"checkOutDate\":\"2026-12-05\",\"customerEmail\":\"hej@test.com\"}"))
+        mockMvc.perform(post("/api/bookings")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {"room":{"id":1},
+                        "checkInDate": "%s",
+                        "checkOutDate": "%s",
+                        "customerEmail": "hej@test.com"
+                        }
+                        """.formatted(checkInDate, checkOutDate)))
                 .andExpect(status().isCreated());
 
     }
@@ -58,10 +71,22 @@ public class BookingIntegrationTest {
 
 //        Act and Assert
         mockMvc.perform(post("/api/bookings").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"room\":{\"id\":1},\"checkInDate\":\"2026-12-01\",\"checkOutDate\":\"2026-12-05\",\"customerEmail\":\"hej@test.com\"}"))
+                        .content("""
+                                {"room":{"id":1},
+                                "checkInDate": "%s",
+                                "checkOutDate": "%s",
+                                "customerEmail": "hej@test.com"
+                                }
+                        """.formatted(checkInDate, checkOutDate)))
                 .andExpect(status().isCreated());
         mockMvc.perform(post("/api/bookings").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON)
-                .content("{\"room\":{\"id\":1},\"checkInDate\":\"2026-12-01\",\"checkOutDate\":\"2026-12-05\",\"customerEmail\":\"da@test.com\"}"))
+                        .content("""
+                                {"room":{"id":1},
+                                "checkInDate": "%s",
+                                "checkOutDate": "%s",
+                                "customerEmail": "da@test.com"
+                                }
+                        """.formatted(checkInDate, checkOutDate)))
                 .andExpect(status().isConflict());
 
 
@@ -73,7 +98,13 @@ public class BookingIntegrationTest {
         when(customerClient.customerExists(any())).thenReturn(false);
 
         mockMvc.perform(post("/api/bookings").header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"room\":{\"id\":1},\"checkInDate\":\"2026-12-01\",\"checkOutDate\":\"2026-12-05\",\"customerEmail\":\"hej@test.com\"}"))
+                        .content("""
+                                {"room":{"id":1},
+                                "checkInDate": "%s",
+                                "checkOutDate": "%s",
+                                "customerEmail": "hej@test.com"
+                                }
+                        """.formatted(checkInDate, checkOutDate)))
                 .andExpect(status().isNotFound());
     }
 
@@ -83,7 +114,14 @@ public class BookingIntegrationTest {
 
         mockMvc.perform(post("/api/bookings")
                         .header("Authorization", "Bearer " + token).contentType(MediaType.APPLICATION_JSON)
-                .content("{\"room\":{\"id\":1},\"checkInDate\":\"2026-12-05\",\"checkOutDate\":\"2026-12-04\",\"customerEmail\":\"hej@test.com\"}"))
+                        .content("""
+                                {
+                                "room":{"id":1},
+                                "checkInDate": "%s",
+                                "checkOutDate": "%s",
+                                "customerEmail": "hej@test.com"
+                                }
+                        """.formatted(checkOutDate, checkInDate)))
                 .andExpect(status().isBadRequest());
     }
 
